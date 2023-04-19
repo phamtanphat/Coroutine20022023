@@ -11,22 +11,33 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        CoroutineScope(Dispatchers.IO).launch {
-            var a = async { randomA() }
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val handler = CoroutineExceptionHandler { _, throwable ->
+//                Log.d("BBB", throwable.toString())
+//            }
+//
+//            CoroutineScope(handler).launch{
+//                throw NullPointerException()
+//            }
+//
+//            CoroutineScope(handler).launch {
+//                throw AssertionError()
+//            }
+//        }
 
-            var b = async { randomB() }
-
-            var c = a.await() + b.await()
-
-            Log.d("BBB", a.await().toString())
-            Log.d("BBB", b.await().toString())
-            Log.d("BBB", c.toString())
-        }
+//        CoroutineScope(Dispatchers.IO).launch   {
+//            val a = async { throw Exception() }
+//            try {
+//                a.await()
+//            } catch (e: Exception) {
+//                Log.d("BBB", e.toString())
+//            }
+//        }
     }
 
     suspend fun randomA(): Int {
         delay(1000)
-        return Random.nextInt(10)
+        throw java.lang.NullPointerException()
     }
 
     suspend fun randomB(): Int {
