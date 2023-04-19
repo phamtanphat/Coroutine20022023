@@ -12,26 +12,24 @@ class MainActivity : AppCompatActivity() {
 
 
         CoroutineScope(CoroutineName("name1") + Dispatchers.IO + Job()).launch {
-            Log.d("BBB", "Coroutine parent ${Thread.currentThread().name}")
-
-            val job = launch {
-                Log.d("BBB", "Coroutine 1 ${Thread.currentThread().name}")
-                for (element in 1..1000) {
-                    Log.d("BBB", "Coroutine 1 $element")
-                    delay(50)
+            val startTime = System.currentTimeMillis()
+            val job = launch(Dispatchers.Default) {
+                var nextPrintTime = startTime
+                var i = 0
+                while (i < 5) { // computation loop, just wastes CPU
+                    // print a message twice a second
+                    if (isActive) {
+                        if (System.currentTimeMillis() >= nextPrintTime) {
+                            Log.d("BBB","job: I'm sleeping ${i++} ...")
+                            nextPrintTime += 500L
+                        }
+                    }
                 }
             }
-
-            job.join()
-            val job2 = launch {
-                Log.d("BBB", "Coroutine 2 ${Thread.currentThread().name}")
-                for (element in 1..1000) {
-                    Log.d("BBB", "Coroutine 2 $element")
-                    delay(50)
-                }
-            }
-
-            Log.d("BBB", "Job $job")
+            delay(1300L) // delay a bit
+            Log.d("BBB","main: I'm tired of waiting!")
+            job.cancelAndJoin() // cancels the job and waits for its completion
+            Log.d("BBB","main: Now I can quit.")
         }
     }
 }
