@@ -3,6 +3,7 @@ package com.example.coroutine20022023
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.recyclerview.widget.RecyclerView.ViewCacheExtension
 import kotlinx.coroutines.*
 import kotlin.random.Random
 
@@ -16,34 +17,26 @@ class MainActivity : AppCompatActivity() {
                 Log.d("BBB", throwable.toString())
             }
 
-            val job1 = CoroutineScope(handler).launch {
-                throw NullPointerException()
+            val job = CoroutineScope(Dispatchers.Default + handler).launch {
+                launch {
+                    delay(200)
+                    throw NullPointerException()
+                }
+
+                launch {
+                    delay(100)
+                    throw ArithmeticException()
+                }
+
+                launch {
+                    delay(500)
+                    throw NumberFormatException()
+                }
             }
 
-            job1.join()
-
-            val deferred = CoroutineScope(handler).async {
-                throw ArithmeticException()
-            }
-
-            try {
-                deferred.await()
-            }catch (e: Exception) {
-                Log.d("BBB", "Exception async: ${e.toString()}")
-            }
+            delay(1000)
+            job.join()
         }
-
-//        CoroutineScope(Dispatchers.IO).launch {
-//            try {
-//                coroutineScope {
-//                    val a = async { throw Exception() }
-//                    a.join()
-//                    a.await()
-//                }
-//            } catch (e: Exception) {
-//                Log.d("BBB", e.toString())
-//            }
-//        }
     }
 
     suspend fun randomA(): Int {
