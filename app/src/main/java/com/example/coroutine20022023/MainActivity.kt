@@ -16,17 +16,20 @@ class MainActivity : AppCompatActivity() {
                 Log.d("BBB", throwable.toString())
             }
 
-            CoroutineScope(handler).launch {
+            val job1 = CoroutineScope(handler).launch {
                 throw NullPointerException()
             }
 
+            job1.join()
 
-            launch {
-                try {
-                    throw ArrayStoreException()
-                } catch (e: Exception) {
-                    Log.d("BBB", "On Catch: ${e.toString()}")
-                }
+            val deferred = CoroutineScope(handler).async {
+                throw ArithmeticException()
+            }
+
+            try {
+                deferred.await()
+            }catch (e: Exception) {
+                Log.d("BBB", "Exception async: ${e.toString()}")
             }
         }
 
