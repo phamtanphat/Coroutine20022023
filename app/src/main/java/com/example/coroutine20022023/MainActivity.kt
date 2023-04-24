@@ -11,24 +11,32 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val handler = CoroutineExceptionHandler { _, throwable ->
-//                Log.d("BBB", throwable.toString())
-//            }
-//
-//            CoroutineScope(handler).launch{
-//                throw NullPointerException()
-//            }
-//
-//            CoroutineScope(handler).launch {
-//                throw AssertionError()
-//            }
-//        }
+        CoroutineScope(Dispatchers.IO).launch {
+            val handler = CoroutineExceptionHandler { _, throwable ->
+                Log.d("BBB", throwable.toString())
+            }
 
-//        CoroutineScope(Dispatchers.IO).launch   {
-//            val a = async { throw Exception() }
+            CoroutineScope(handler).launch {
+                throw NullPointerException()
+            }
+
+
+            launch {
+                try {
+                    throw ArrayStoreException()
+                } catch (e: Exception) {
+                    Log.d("BBB", "On Catch: ${e.toString()}")
+                }
+            }
+        }
+
+//        CoroutineScope(Dispatchers.IO).launch {
 //            try {
-//                a.await()
+//                coroutineScope {
+//                    val a = async { throw Exception() }
+//                    a.join()
+//                    a.await()
+//                }
 //            } catch (e: Exception) {
 //                Log.d("BBB", e.toString())
 //            }
